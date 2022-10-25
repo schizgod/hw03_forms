@@ -1,7 +1,7 @@
 from django.urls import path
 
-from posts import views
-from posts.apps import PostsConfig
+from . import views
+from .apps import PostsConfig
 
 app_name = PostsConfig.name
 
