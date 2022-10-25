@@ -1,39 +1,40 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
+
+from core.utils import truncatechars
+from yatube.settings import STRING_TRANCATE_NUM
 
 User = get_user_model()
 
 
 class Group(models.Model):
-    title = models.CharField(max_length=200, verbose_name='Заголовок группы',
-                             help_text='Укажите заголовок группы')
-    slug = models.SlugField(max_length=160, unique=True,
-                            verbose_name="Slug (идентификатор)",
-                            help_text="Slug это уникальная строка,\
-                             понятная человеку")
-    description = models.TextField(verbose_name='Описание',
-                                   help_text='У группы должно быть описание')
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    description = models.TextField()
 
     def __str__(self):
-        return self.title
+        return truncatechars(self.title, STRING_TRANCATE_NUM)
 
 
 class Post(models.Model):
-    text = models.TextField(verbose_name='Текст сообщения',
-                            help_text='Обязательное поле,\
-                             не должно быть пустым')
-    pub_date = models.DateTimeField("date published", auto_now_add=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True,
-                               null=True, related_name="posts",
-                               verbose_name="Автор",
-                               help_text="Выберите имя автора")
-    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, blank=True,
-                              null=True, related_name="posts",
-                              verbose_name="Группа",
-                              help_text="Выберите название группы")
-
-    class Meta:
-        ordering = ("-pub_date",)
+    text = models.TextField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
-        return self.text[:15]
+        return truncatechars(self.text, STRING_TRANCATE_NUM)
+
+    class Meta:
+        ordering = ('-pub_date',)
+        verbose_name = 'Пост'
+        verbose_name_plural = 'Посты'
+        default_related_name = 'posts'

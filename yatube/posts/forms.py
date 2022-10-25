@@ -1,19 +1,19 @@
-from django.forms import ModelForm
-from .models import Post
+from django import forms
+
+from posts.models import Post
 
 
-class NewPost(ModelForm):
-    """
-     Если необходимо сделать переопределение verbose_name и help_texts
-     непосредственно из формы. После fields указываем
-            labels = {
-                'group': _('Группа'),
-                'text': _('Сообщение'),
-            }
-            help_texts = {
-                'text': _('Обязательное поле, не должно быть пустым')
-            }
-     """
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('group', 'text')
+        fields = ('text', 'group')
+        help_texts = {
+            'text': 'Текст нового поста',
+            'group': 'Группа, к которой будет относиться пост',
+        }
+        labels = {
+            'text': ('Текст нового поста'),
+            'pub_date': ('Дата публикации'),
+            'author': ('Автор'),
+            'group': ('Группа'),
+        }
