@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from core.utils import truncatechars
-from yatube.settings import STRING_TRANCATE_NUM
 
 User = get_user_model()
 
@@ -29,9 +27,6 @@ class Post(models.Model):
         null=True,
         blank=True,
     )
-
-    def __str__(self):
-        return truncatechars(self.text, STRING_TRANCATE_NUM)
 
     class Meta:
         ordering = ('-pub_date',)
