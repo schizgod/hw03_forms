@@ -9,7 +9,8 @@ from yatube.settings import POSTS_NUMBER
 
 def index(request):
     page_obj = paginate(
-        request, POSTS_NUMBER, Post.objects.select_related('group').all(),
+        request, POSTS_NUMBER,
+        Post.objects.select_related('group', 'author').all(),
     )
     return render(
         request,
@@ -37,17 +38,18 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    page_obj = paginate(
-        request, POSTS_NUMBER, author.posts.all(),
-    )  # переименовано. изменить в шаблоне
-    return render(
-        request,
-        'posts/profile.html',
-        {
-            'author': author,
-            'page_obj': page_obj,
-        },
-    )
+    posts = author.posts.select_related('author', 'group')
+    posts_count = posts.count()
+    page_obj = paginate(request,
+                        POSTS_NUMBER,
+                        author.posts.select_related('author', 'group')
+                        )
+    context = {
+        'author': author,
+        'posts_count': posts_count,
+        'page_obj': page_obj
+    }
+    return render(request, 'posts/profile.html', context)
 
 
 def post_detail(request, post_id):
@@ -84,18 +86,31 @@ def post_create(request):
 
 
 @login_required
-def post_edit(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    form = PostForm(request.POST or None, instance=post)
-    if request.method != 'POST':
-        return render(
-            request,
-            'posts/create_post.html',
-            {'form': form, 'is_edit': True, 'post': post},
-        )
-    if request.user.id != post.author.id:
-        return redirect('posts:post_detail', post.pk)
+def post_create(request):
+    form = PostForm(request.POST or None)
     if form.is_valid():
         post = form.save(commit=False)
+        post.author = request.user
         post.save()
-        return redirect('posts:post_detail', post_id=post_id)
+        return redirect('posts:profile', request.user)
+
+    context = {'form': form}
+    return render(request, 'posts/create_post.html', context)
+
+
+@login_required
+def post_edit(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    if request.user.id != post.author.id:
+        return redirect("posts:post_detail", post.pk)
+    form = PostForm(request.POST or None, instance=post)
+    if form.is_valid():
+        post.text = form.cleaned_data['text']
+        post.group = form.cleaned_data['group']
+        post.save()
+        form.save()
+        return redirect('posts:post_detail', post_id)
+
+    context = {'form': form, 'is_edit': True, 'post': post}
+    return render(request, 'posts/create_post.html', context)

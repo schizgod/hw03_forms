@@ -11,7 +11,7 @@ class Group(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return truncatechars(self.title, STRING_TRANCATE_NUM)
+        return self.title
 
 
 class Post(models.Model):
@@ -27,6 +27,9 @@ class Post(models.Model):
         null=True,
         blank=True,
     )
+
+    def __str__(self):
+        return f'{self.text[:15]}'
 
     class Meta:
         ordering = ('-pub_date',)
