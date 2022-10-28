@@ -7,7 +7,6 @@ from posts.forms import PostForm
 from posts.models import Group, Post, User
 
 
-
 def index(request):
     page_obj = paginate(
         request, settings.POSTS_NUMBER,
@@ -25,7 +24,8 @@ def index(request):
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     page_obj = paginate(
-        request, settings.POSTS_NUMBER, group.posts.select_related('author').all(),
+        request, settings.POSTS_NUMBER,
+        group.posts.select_related('author').all(),
     )
     return render(
         request,
