@@ -1,0 +1,14 @@
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            {{ field.label }}: {{ error|escape }}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+<div class="alert alert-danger">
+    {{ error|escape }}
+  </div>
+<form method="post"
+    {% if action_url %}
+    action="{% url action_url %}"
+        {% endif %}>
