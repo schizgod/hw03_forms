@@ -1,23 +1,41 @@
-{% extends "base.html" %}
-{% load static %}
-{% block title %}
-  Профайл пользователя {{ author.first_name }}
-  {{ author.last_name }}
-{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Страница поста{% endblock title %}
 {% block content %}
-  <body>
-    <main>
-      <div class="container py-5">
-        <h1>
-          Все посты пользователя {{ author.get_full_name }}
-        </h1>
-        <h3>Всего постов: {{ author.posts.count }}</h3>
-        {% for post in page_obj %}
-          {% include "includes/paginator.html" %}
-        {% endfor %}
-        {% include "includes/paginator.html" %}
-      </div>
-    </main>
-  </body>
-  </html>
+<div class="row">
+  <aside class="col-12 col-md-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Дата публикации: {{ post.pub_date|date:"d E Y" }}
+      </li>
+        {% if post.group %}
+      <li class="list-group-item">
+        Группа: {{ post.group }}
+        <a href="{% url 'posts:group_list' post.group.slug %}"
+        >все записи группы</a>
+      </li>
+      {% endif %}
+      <li class="list-group-item">
+        Автор: {{ post.author.get_full_name }}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        Всего постов автора: <span> {{ posts_count }} </span>
+      </li>
+      <li class="list-group-item">
+        <a href="{% url 'posts:profile' post.author.username %}">
+        все посты пользователя </a>
+      </li>
+    </ul>
+  </aside>
+  <article class="col-12 col-md-9">
+    <p>
+      {{ post.text|truncatewords:30 }}
+    </p>
+    {% if post.author.username == user.username %}
+      <a class="btn btn-primary" href="{% url 'posts:post_edit' post.id %}">
+        редактировать запись
+    {% endif %}
+      </a>   
+    </p>
+  </article>
+</div>
 {% endblock %}
