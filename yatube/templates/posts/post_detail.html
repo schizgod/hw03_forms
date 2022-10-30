@@ -13,7 +13,7 @@
         </h1>
         <h3>Всего постов: {{ author.posts.count }}</h3>
         {% for post in page_obj %}
-          {% include "posts/includes/post.html" %}
+          {% include "includes/paginator.html" %}
         {% endfor %}
         {% include "includes/paginator.html" %}
       </div>
