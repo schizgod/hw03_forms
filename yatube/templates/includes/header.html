@@ -7,7 +7,7 @@
           <span style="color:red">Ya</span>tube
         </a>
         <ul class="nav nav-pills">
-          <li class="nav-item"> 
+          <li class="nav-item">
             {% with request.resolver_match.view_name as view_name %}
             <a class="nav-link {% if view_name  == 'about:author' %}active{% endif %}" href="{% url 'about:author' %}">Об авторе</a>
             {%endwith%}
@@ -18,12 +18,12 @@
             {%endwith%}
           </li>
           {% if user.is_authenticated %}
-          <li class="nav-item"> 
+          <li class="nav-item">
             {% with request.resolver_match.view_name as view_name %}
             <a class="nav-link {% if view_name  == 'posts:post_create' %}active{% endif %}" href="{% url 'posts:post_create' %}">Новая запись</a>
             {%endwith%}
           </li>
-          <li class="nav-item"> 
+          <li class="nav-item">
             {% with request.resolver_match.view_name as view_name %}
             <a class="nav-link link-light {% if view_name  == 'users:password_change' %}active{% endif %}" href="{% url 'users:password_change' %}">Изменить пароль</a>
             {%endwith%}
@@ -36,12 +36,12 @@
             Пользователь: {{ user.username }}
           </li>
           {% else %}
-          <li class="nav-item"> 
+          <li class="nav-item">
             {% with request.resolver_match.view_name as view_name %}
             <a class="nav-link link-light {% if view_name  == 'users:login' %}active{% endif %}" href="{% url 'users:login' %}">Войти</a>
             {%endwith%}
           </li>
-          <li class="nav-item"> 
+          <li class="nav-item">
             {% with request.resolver_match.view_name as view_name %}
             <a class="nav-link link-light {% if view_name  == 'users:signup' %}active{% endif %}" href="{% url 'users:signup' %}">Регистрация</a>
             {%endwith%}
@@ -49,6 +49,5 @@
           {% endif %}
         </ul>
       </div>
-    </nav>      
+    </nav>
   </header>
-  

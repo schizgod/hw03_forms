@@ -11,13 +11,13 @@
 <article>
   <ul>
     <li>
-      Автор: {{ post.author.get_full_name }} 
+      Автор: {{ post.author.get_full_name }}
       <a href="{% url 'posts:profile' post.author.username%}">все посты пользователя</a>
     </li>
     <li>
       Дата публикации: {{ post.pub_date|date:"d E Y" }}
     </li>
-  </ul>      
+  </ul>
   <p>
     {{ post.text }}
   </p>
@@ -29,6 +29,6 @@
     <hr>
     {% endif %}
 </article>
-{% endfor %} 
+{% endfor %}
     {% include 'posts/includes/paginator.html' %}
   {% endblock %}
