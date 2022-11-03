@@ -7,8 +7,12 @@ SECRET_KEY = '&$jd*@kf9ay8w-+$zx*^dj2nmj9gx-aa3t9ia(+84hp1d3(fgx'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '[::1]',
+    'testserver',
+]
 
 INSTALLED_APPS = [
     'about.apps.AboutConfig',
